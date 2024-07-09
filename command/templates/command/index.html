@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+        </style>
+  </head>
+  <body>
+    <table>
+        <tr>
+          <th>Agent ID</th>
+          <th>Last Heard</th>
+          <th>Host</th>
+        </tr>
+        {% if agents %}
+            {% for agent in agents %}
+                <tr>
+                    <td>
+                        {{ agent.agent_id }}
+                    </td>
+                    <td>
+                        {{ agent.last_heard }}
+                    </td>
+                    <td>
+                        {{ agent.host }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+      </table> 
+  </body>
+</html>
