@@ -43,5 +43,34 @@
             {% endfor %}
         {% endif %}
       </table> 
+
+    <p>Enter command for Agents</p>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit Command">
+    </form>
+
+    <table>
+        <tr>
+          <th>Agent ID</th>
+          <th>Command Text</th>
+        </tr>
+        {% if commands %}
+            {% for cmd in commands %}
+                <tr>
+                    <td>
+                        {{ cmd.agent_id }}
+                    </td>
+                    <td>
+                        {{ cmd.cmd_txt }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+      </table> 
+
+
   </body>
 </html>
