@@ -21,6 +21,7 @@ class BaseAgent():
         params = {"agent_id": self.id}
         try:
             response = requests.get(url=url, params=params)
+            print(response.json())
         except:
             pass
 

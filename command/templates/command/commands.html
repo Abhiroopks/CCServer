@@ -24,37 +24,6 @@
     <table>
         <tr>
           <th>Agent ID</th>
-          <th>Last Heard</th>
-          <th>Host</th>
-        </tr>
-        {% if agents %}
-            {% for agent in agents %}
-                <tr>
-                    <td>
-                        {{ agent.agent_id }}
-                    </td>
-                    <td>
-                        {{ agent.last_heard }}
-                    </td>
-                    <td>
-                        {{ agent.host }}
-                    </td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-      </table> 
-
-    <p>Enter command for Agents</p>
-
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit Command">
-    </form>
-
-    <table>
-        <tr>
-          <th>Agent ID</th>
           <th>Command Text</th>
         </tr>
         {% if commands %}
@@ -70,7 +39,6 @@
             {% endfor %}
         {% endif %}
       </table> 
-
 
   </body>
 </html>

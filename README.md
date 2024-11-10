@@ -2,10 +2,14 @@
 Command &amp; Control of Remote Agents
 
 
+## In Process
+* Command object needs to be more complex
+    * add more types
+* web page for viewing Commands
+
+
 ## TODO
-* Agents receive cmd txt
-* Add more fields to command model - cmd type, output field, etc
-* agents parse formatted cmd txt and perform actions as specified
-* Users can delete cmds from webpage
-* users can view outputs of cmds on webpage
+* Agent Interprets commands and performs operations
+* Agents create Result object and return to server
+* web page for viewing Results
 
