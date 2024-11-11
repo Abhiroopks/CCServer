@@ -44,7 +44,6 @@ def pull_commands(request) -> HttpResponse:
 
 
 def agents(request) -> HttpResponse:
-
     if request.method == "POST":
         if "cmd_form" in request.POST:
             form = CommandForm(request.POST)
@@ -58,9 +57,21 @@ def agents(request) -> HttpResponse:
             form = DeleteAgentForm(request.POST)
             if form.is_valid():
                 form.cleaned_data.get("agent_id").delete()
+
     context = {"agents": list(Agent.objects.all())}
 
     return render(request=request, template_name="command/agents.html", context=context)
+
+
+def commands(request):
+    if request.method == "POST":
+        pass
+
+    context = {"commands": list(Command.objects.all())}
+
+    return render(
+        request=request, template_name="command/commands.html", context=context
+    )
 
 
 def get_client_ip(request):

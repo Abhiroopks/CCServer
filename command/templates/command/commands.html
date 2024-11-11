@@ -1,44 +1,31 @@
-<!doctype html>
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-    <style>
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-        }
-        
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-        </style>
-  </head>
-  <body>
-    <table>
-        <tr>
-          <th>Agent ID</th>
-          <th>Command Text</th>
-        </tr>
-        {% if commands %}
-            {% for cmd in commands %}
-                <tr>
-                    <td>
-                        {{ cmd.agent_id }}
-                    </td>
-                    <td>
-                        {{ cmd.cmd_txt }}
-                    </td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-      </table> 
+{% extends 'command/base.html' %}
+{% load static %}
 
-  </body>
-</html>
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/table.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <table>
+    <tr>
+      <th>Agent ID</th>
+      <th>Command Type</th>
+      <th>Command Arguments</th>
+      <th>Sent</th>
+    </tr>
+    {% if commands %}
+      {% for cmd in commands %}
+        <tr>
+          <td>{{ cmd.agent_id.id }}</td>
+          <td>{{ cmd.get_cmd_type_display }}</td>
+          <td>{{ cmd.cmd_args }}</td>
+          <td>{{ cmd.sent }}</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

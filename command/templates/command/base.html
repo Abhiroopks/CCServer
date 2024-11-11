@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Command and Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+    {% block style %}
+
+    {% endblock %}
+  </head>
+  <body>
+    <div class="topnav">
+      <a href="agents">Agents</a>
+      <a href="commands">Commands</a>
+    </div>
+
+    <div style="padding-left:16px">
+      <h2>Top Navigation Example</h2>
+      <p>Some content..</p>
+    </div>
+
+    {% block content %}
+
+    {% endblock %}
+
+    {% block scripts %}
+
+    {% endblock %}
+  </body>
+</html>

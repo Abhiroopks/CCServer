@@ -1,172 +1,63 @@
-<!DOCTYPE html>
-<style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  
-  /* Button used to open the contact form - fixed at the bottom of the page */
-  .open-button {
-    background-color: #555;
-    color: white;
-    padding: 16px 20px;
-    border: none;
-    cursor: pointer;
-    opacity: 0.8;
-    position: fixed;
-    bottom: 23px;
-    right: 28px;
-    width: 280px;
-  }
-  
-  /* The popup form - hidden by default */
-  .form-popup {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    right: 15px;
-    border: 3px solid #f1f1f1;
-    z-index: 9;
-  }
-  
-  /* Add styles to the form container */
-  .form-container {
-    max-width: 300px;
-    padding: 10px;
-    background-color: white;
-  }
-  
-  /* Full-width input fields */
-  .form-container input[type='text'],
-  .form-container input[type='password'] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    border: none;
-    background: #f1f1f1;
-  }
-  
-  /* When the inputs get focus, do something */
-  .form-container input[type='text']:focus,
-  .form-container input[type='password']:focus {
-    background-color: #ddd;
-    outline: none;
-  }
-  
-  /* Set a style for the submit/login button */
-  .form-container .btn {
-    background-color: #04aa6d;
-    color: white;
-    padding: 16px 20px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-  
-  /* Add a red background color to the cancel button */
-  .form-container .cancel {
-    background-color: red;
-  }
-  
-  /* Add some hover effects to buttons */
-  .form-container .btn:hover,
-  .open-button:hover {
-    opacity: 1;
-  }
-</style>
+{% extends 'command/base.html' %}
+{% load static %}
 
-<html>
-  <head>
-    <title>This is the title of the webpage!</title>
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-      
-      td,
-      th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-      
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
-    </style>
-  </head>
-  <body>
-    <table>
-      <tr>
-        <th>Agent ID</th>
-        <th>Last Heard</th>
-        <th>Host</th>
-        <th>Options</th>
-      </tr>
-      {% if agents %}
-        {% for agent in agents %}
-          <tr>
-            <td>{{ agent.id }}</td>
-            <td>{{ agent.last_heard }}</td>
-            <td>{{ agent.host }}</td>
-            <td>
-              <button onclick="openForm(event);" style="width:fit-content">Enter Command</button>
-              <button onclick="deleteAgent(event);" style="width:fit-content">Delete Agent</button>
-            </td>
-          </tr>
-        {% endfor %}
-      {% endif %}
-    </table>
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/table.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/command_form.css' %}" />
+{% endblock %}
 
-    <!-- The command form -->
-    <div class="form-popup" id="cmd_form">
-      <form class="form-container" method="post" action="">
-        {% csrf_token %}
-        <h1>Submit Command</h1>
-        <input type="hidden" name="cmd_form" />
-        <label for="form_agent_id"><b>Agent ID</b></label>
-        <input type="text" id="form_agent_id" name="agent_id" required readonly />
-        <label for="cmd_type"><b>Command Type</b></label>
-        <select name="cmd_type" id="cmd_type">
-          <option value="ls">List Directory Contents</option>
-        </select>
-        <br />
-        <br />
-        <label for="cmd_args"><b>Command Arguments</b></label>
-        <input type="text" id="cmd_args" name="cmd_args" />
-        <button type="submit" class="btn">Submit</button>
-        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-      </form>
-    </div>
+{% block content %}
+  <table>
+    <tr>
+      <th>Agent ID</th>
+      <th>Last Heard</th>
+      <th>Host</th>
+      <th>Options</th>
+    </tr>
+    {% if agents %}
+      {% for agent in agents %}
+        <tr>
+          <td>{{ agent.id }}</td>
+          <td>{{ agent.last_heard }}</td>
+          <td>{{ agent.host }}</td>
+          <td>
+            <button onclick="openForm(event);" style="width:fit-content">Enter Command</button>
+            <button onclick="deleteAgent(event);" style="width:fit-content">Delete Agent</button>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
 
-    <!-- The Delete Agent Form (hidden) -->
-    <form display="hidden" method="post" action="" name="delete_agent_form">
+  <!-- The command form -->
+  <div class="form-popup" id="cmd_form">
+    <form class="form-container" method="post" action="">
       {% csrf_token %}
-      <input type="hidden" name="delete_agent_form" />
-      <input type="hidden" id="delete_agent_field" name="agent_id" readonly />
+      <h1>Submit Command</h1>
+      <input type="hidden" name="cmd_form" />
+      <label for="form_agent_id"><b>Agent ID</b></label>
+      <input type="text" id="form_agent_id" name="agent_id" required readonly />
+      <label for="cmd_type"><b>Command Type</b></label>
+      <select name="cmd_type" id="cmd_type">
+        <option value="ls">List Directory Contents</option>
+      </select>
+      <br />
+      <br />
+      <label for="cmd_args"><b>Command Arguments</b></label>
+      <input type="text" id="cmd_args" name="cmd_args" />
+      <button type="submit" class="btn">Submit</button>
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
-  </body>
-  <script type="text/javascript">
-    function openForm(event) {
-      agent_id = event.target.parentNode.parentNode.childNodes[1].innerText
-      document.getElementById('cmd_form').style.display = 'block'
-      document.getElementById('form_agent_id').value = agent_id
-    }
-    
-    function closeForm() {
-      document.getElementById('cmd_form').style.display = 'none'
-    }
-    
-    function deleteAgent(event) {
-      agent_id = event.target.parentNode.parentNode.childNodes[1].innerText
-      document.getElementById('delete_agent_field').value = agent_id
-      document.delete_agent_form.submit()
-    }
-  </script>
-</html>
+  </div>
+
+  <!-- The Delete Agent Form (hidden) -->
+  <form display="hidden" method="post" action="" name="delete_agent_form">
+    {% csrf_token %}
+    <input type="hidden" name="delete_agent_form" />
+    <input type="hidden" id="delete_agent_field" name="agent_id" readonly />
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/agents.js' %}"></script>
+{% endblock %}
