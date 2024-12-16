@@ -12,6 +12,9 @@
       <th>Command Type</th>
       <th>Command Arguments</th>
       <th>Sent</th>
+      <th>Status</th>
+      <th>Output</th>
+      <th>Error</th>
     </tr>
     {% if commands %}
       {% for cmd in commands %}
@@ -20,6 +23,9 @@
           <td>{{ cmd.get_cmd_type_display }}</td>
           <td>{{ cmd.cmd_args }}</td>
           <td>{{ cmd.sent }}</td>
+          <td>{{ cmd.status }}</td>
+          <td>{{ cmd.output }}</td>
+          <td>{{ cmd.error }}</td>
         </tr>
       {% endfor %}
     {% endif %}

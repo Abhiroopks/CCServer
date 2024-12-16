@@ -1,6 +1,15 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
-COMMAND_TYPES = [("ls", "List Files")]
+
+class CommandTypes(models.TextChoices):
+    LS = "ls", _("List Directory Contents")
+
+
+class StatusTypes(models.TextChoices):
+    UNKNOWN = "unknown", _("Unknown")
+    SUCCESS = "success", _("Success")
+    FAIL = "fail", _("Fail")
 
 
 class Agent(models.Model):
@@ -12,18 +21,18 @@ class Agent(models.Model):
 class Command(models.Model):
     agent_id = models.ForeignKey(to=Agent, on_delete=models.CASCADE)
     cmd_type = models.CharField(
-        max_length=32, choices=COMMAND_TYPES, verbose_name="Command Type"
+        max_length=32, choices=CommandTypes.choices, verbose_name="Command Type"
     )
     ##
     # Command Args will be a JSON-serialized list.
     # Making sense of these will depend on the command type.
     cmd_args = models.CharField(max_length=1024, verbose_name="Command Arguments")
     sent = models.BooleanField(default=False)
-
-
-class CommandResult(models.Model):
-    cmd_id = models.ForeignKey(
-        to=Command, on_delete=models.CASCADE, verbose_name="Command ID"
+    status = models.CharField(
+        max_length=16,
+        choices=StatusTypes.choices,
+        verbose_name="Command Status",
+        default=StatusTypes.UNKNOWN,
     )
-    cmd_output = models.CharField(max_length=1024, verbose_name="Command Output")
-    cmd_error = models.CharField(max_length=1024, verbose_name="Command Error")
+    output = models.CharField(max_length=1024, verbose_name="Command Output")
+    error = models.CharField(max_length=1024, verbose_name="Command Error")

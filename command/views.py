@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from command.models import Agent, Command
+from command.models import Agent, Command, StatusTypes
 from command.forms import CommandForm, DeleteAgentForm
 from django.core import serializers
 
@@ -16,11 +16,31 @@ def args_to_json(args: str) -> str:
     return json.dumps(args.split(" "))
 
 
+def push_result(request) -> HttpResponse:
+    data = json.loads(request.body)
+    cmd_id = data["cmd_id"]
+    output = data["output"]
+    error = data["error"]
+    try:
+        command = Command.objects.get(id=cmd_id)
+        command.output = output
+        command.error = error
+        if command.error:
+            command.status = StatusTypes.FAIL
+        else:
+            command.status = StatusTypes.SUCCESS
+
+    except Command.DoesNotExist:
+        return HttpResponseBadRequest("Unrecognized command ID")
+
+    return HttpResponse()
+
+
 def pull_commands(request) -> HttpResponse:
     ##
     # Update agent's last_heard if seen before
     # if not seen before, create the new agent
-    agent_id = request.GET["agent_id"]
+    agent_id = json.loads(request.body)["agent_id"]
 
     try:
         agent = Agent.objects.get(id=agent_id)
