@@ -2,34 +2,45 @@
 {% load static %}
 
 {% block style %}
-  <link rel="stylesheet" href="{% static 'css/table.css' %}" />
+<link rel="stylesheet" href="{% static 'css/table.css' %}" />
 {% endblock %}
 
 {% block content %}
-  <table>
-    <tr>
-      <th>Agent ID</th>
-      <th>Command Type</th>
-      <th>Command Arguments</th>
-      <th>Sent</th>
-      <th>Status</th>
-      <th>Output</th>
-      <th>Error</th>
-    </tr>
-    {% if commands %}
-      {% for cmd in commands %}
-        <tr>
-          <td>{{ cmd.agent_id.id }}</td>
-          <td>{{ cmd.get_cmd_type_display }}</td>
-          <td>{{ cmd.cmd_args }}</td>
-          <td>{{ cmd.sent }}</td>
-          <td>{{ cmd.status }}</td>
-          <td>{{ cmd.output }}</td>
-          <td>{{ cmd.error }}</td>
-        </tr>
-      {% endfor %}
+<table>
+  <tr>
+    <th>Agent ID</th>
+    <th>Command Type</th>
+    <th>Command Arguments</th>
+    <th>Sent</th>
+    <th>Status</th>
+    <th>Output</th>
+    <th>Error</th>
+  </tr>
+  {% if commands %}
+  {% for cmd in commands %}
+  <tr>
+    <td>{{ cmd.agent_id.id }}</td>
+    <td>{{ cmd.get_cmd_type_display }}</td>
+    <td>{{ cmd.cmd_args }}</td>
+    <td>{{ cmd.sent }}</td>
+    <td>{{ cmd.status }}</td>
+    {% if cmd.get_cmd_type_display == "List Directory Contents" %}
+    <td>
+      <ul>
+        {% for line in cmd.output.splitlines %}
+        <li>{{ line }}</li>
+        {% endfor %}
+      </ul>
+    </td>
+    {% else %}
+    <td>{{ cmd.output }}</td>
     {% endif %}
-  </table>
+    <td>{{ cmd.output }}</td>
+    <td>{{ cmd.error }}</td>
+  </tr>
+  {% endfor %}
+  {% endif %}
+</table>
 {% endblock %}
 
 {% block scripts %}

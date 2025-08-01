@@ -1,10 +1,7 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.shortcuts import render
-from command.models import Agent, Command, StatusTypes
+from command.models import Agent, Command
 from command.forms import CommandForm, DeleteAgentForm
-from django.core import serializers
-
-from django.utils import timezone
 
 import json
 
@@ -14,53 +11,6 @@ def args_to_json(args: str) -> str:
     Parses a string consisting of space-separated words and returns a JSON-serialized list of the words.
     """
     return json.dumps(args.split(" "))
-
-
-def push_result(request) -> HttpResponse:
-    data = json.loads(request.body)
-    cmd_id = data["cmd_id"]
-    output = data["output"]
-    error = data["error"]
-    try:
-        command = Command.objects.get(id=cmd_id)
-        command.output = output
-        command.error = error
-        if command.error:
-            command.status = StatusTypes.FAIL
-        else:
-            command.status = StatusTypes.SUCCESS
-
-    except Command.DoesNotExist:
-        return HttpResponseBadRequest("Unrecognized command ID")
-
-    return HttpResponse()
-
-
-def pull_commands(request) -> HttpResponse:
-    ##
-    # Update agent's last_heard if seen before
-    # if not seen before, create the new agent
-    agent_id = json.loads(request.body)["agent_id"]
-
-    try:
-        agent = Agent.objects.get(id=agent_id)
-        agent.last_heard = timezone.now()
-        agent.save()
-    except Agent.DoesNotExist:
-        agent = Agent()
-        agent.id = agent_id
-        agent.last_heard = timezone.now()
-        agent.host = get_client_ip(request)
-        agent.save()
-
-    ##
-    # Fetch all commands for this agent to run
-    cmds = Command.objects.filter(agent_id=agent_id).filter(sent=False)
-    for cmd in cmds:
-        cmd.sent = True
-        cmd.save()
-
-    return HttpResponse(serializers.serialize("json", cmds))
 
 
 def agents(request) -> HttpResponse:
@@ -94,10 +44,3 @@ def commands(request):
     )
 
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(",")[0]
-    else:
-        ip = request.META.get("REMOTE_ADDR")
-    return ip

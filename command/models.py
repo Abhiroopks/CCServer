@@ -35,4 +35,4 @@ class Command(models.Model):
         default=StatusTypes.UNKNOWN,
     )
     output = models.CharField(max_length=1024, verbose_name="Command Output")
-    error = models.CharField(max_length=1024, verbose_name="Command Error")
+    error = models.CharField(max_length=1024, verbose_name="Command Error", null=True)
